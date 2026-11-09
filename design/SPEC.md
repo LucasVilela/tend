@@ -2,7 +2,7 @@
 
 An iPhone app built on three daily practices, **Journal**, **Meditation** and **Exercise**, plus a **Mood** tracker. The look is dark, minimal and calm, with one deliberately playful element: the three "buddies" on Today.
 
-The app has no name yet. Use `[APP NAME]` wherever a name is needed (bundle display name, about screen).
+The app is called **Tend**. Use it wherever a name is needed (bundle display name, about screen).
 
 ## 0. Product principles
 - **Tracking, not doing.** Meditation and plain journaling happen elsewhere (another app, a notebook, a timer). The app records *that* they happened: when, how long, plus optional details. There's no meditation timer and no free-writing editor.

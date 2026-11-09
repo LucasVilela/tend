@@ -33,7 +33,7 @@ targets:
     info:
       path: Config/Practices-Info.plist
       properties:
-        CFBundleDisplayName: "[APP NAME]"
+        CFBundleDisplayName: Tend
         UIAppFonts:
           - Geist-Light.ttf
           - Geist-Regular.ttf

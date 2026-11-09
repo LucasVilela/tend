@@ -1,6 +1,6 @@
 # Project: Journal · Meditation · Exercise (iPhone app)
 
-An iPhone app for three daily practices (journal, meditation, exercise) plus a mood tracker. Today shows the three practices as overlapping blob "buddies" with faces that fill up during the day. They're the one playful element on an otherwise calm, minimal, dark design. There's no app name yet; use `[APP NAME]`.
+An iPhone app for three daily practices (journal, meditation, exercise) plus a mood tracker. Today shows the three practices as overlapping blob "buddies" with faces that fill up during the day. They're the one playful element on an otherwise calm, minimal, dark design. The app is called **Tend** (display name; the Xcode target and module are `Practices`).
 
 ## Product rules (most important)
 - **Tracking, not doing.** Meditation and plain journaling happen outside the app. The app logs when, how long and optional details. There's no meditation timer and no free-writing editor.

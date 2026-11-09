@@ -4,7 +4,7 @@ This folder holds everything Claude Code needs: `README.md` (what the app does),
 
 ## 1. Create the Xcode project (2 minutes)
 In Xcode: **File › New › Project › iOS › App**
-- Product Name: anything for now (the app has no name yet)
+- Product Name: anything for now (the app is called Tend)
 - Interface: **SwiftUI** · Storage: **SwiftData**
 - Save it **inside this folder**.
 

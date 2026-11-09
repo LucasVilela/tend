@@ -1,4 +1,4 @@
-# [APP NAME]: what the app does
+# Tend: what the app does
 
 A calm iPhone app for keeping three daily practices: **Journal**, **Meditation** and **Exercise**. It also has a **mood tracker** and a **vision board**. You do the practices wherever you like (a notebook, a meditation app, a run outside). This app is where you note that you did them, see how your days are going, and keep what matters in view.
 
