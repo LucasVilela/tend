@@ -136,4 +136,14 @@ final class DayStatsServiceTests: XCTestCase {
         XCTAssertEqual(s.statusLine(.exercise, now: now), "0 of 30 min")
         XCTAssertEqual(service(S()).statusLine(.journal, now: now), "Not yet")
     }
+
+    func testStatusLinesForAPastDay() {
+        let s = service(S(
+            journalLogs: [.init(date: TestClock.at(-1, 21, 40))],
+            meditations: [.init(date: TestClock.at(-2, 7), minutes: 5)]
+        ))
+        XCTAssertEqual(s.statusLine(.journal, on: TestClock.day(-1), now: now), "Done · 9:40 pm")
+        XCTAssertEqual(s.statusLine(.journal, on: TestClock.day(-2), now: now), "Not logged")
+        XCTAssertEqual(s.statusLine(.meditation, on: TestClock.day(-2), now: now), "5 of 15 min")
+    }
 }

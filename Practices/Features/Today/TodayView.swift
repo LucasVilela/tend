@@ -19,6 +19,8 @@ struct TodayView: View {
     @AppStorage("exerciseGoalMinutes") private var exerciseGoal = Tokens.Defaults.exerciseMinutesPerDay
 
     @State private var askingForName = false
+    /// A past day picked in the week strip; nil shows today.
+    @State private var selectedDay: Date?
     @State private var nameDraft = ""
 
     private let calendar = Calendar.practices
@@ -52,33 +54,59 @@ struct TodayView: View {
             goals: Goals(meditationMinutes: meditationGoal, exerciseMinutes: exerciseGoal),
             calendar: calendar
         )
+        // The day being shown: today, or a past day picked in the week strip.
+        let day = selectedDay.flatMap { calendar.isDate($0, inSameDayAs: now) ? nil : $0 } ?? now
+        let isPast = !calendar.isDate(day, inSameDayAs: now)
         let moodStats = MoodStatsService(calendar: calendar)
-        let todaysMoods = moodLogs.filter { calendar.isDate($0.loggedAt, inSameDayAs: now) }
+        let daysMoods = moodLogs.filter { calendar.isDate($0.loggedAt, inSameDayAs: day) }
         let quickFaces = moodStats.quickFaces(moodLogs.map(MoodCheckIn.init), now: now)
-        let latestToday = todaysMoods.first
+        let latestToday = daysMoods.first
         let selectedQuick = latestToday.flatMap { log in
             log.moods.count == 1 && quickFaces.contains(log.moods[0]) ? log : nil
         }
-        let doneCount = stats.doneCount(on: now)
+        let doneCount = stats.doneCount(on: day)
 
         return ScrollView {
             VStack(alignment: .leading, spacing: 22) {
-                header(now: now)
+                header(now: now, day: day)
 
-                WeekStrip(days: calendar.days(endingAt: now, count: 7).map { day in
-                    WeekStrip.Day(date: day, statuses: stats.statuses(on: day), isToday: calendar.isDate(day, inSameDayAs: now))
+                WeekStrip(days: calendar.days(endingAt: now, count: 7).map { d in
+                    WeekStrip.Day(date: d, statuses: stats.statuses(on: d),
+                                  isToday: calendar.isDate(d, inSameDayAs: now),
+                                  isSelected: calendar.isDate(d, inSameDayAs: day))
+                }, onSelect: { picked in
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        selectedDay = calendar.isDate(picked, inSameDayAs: now) ? nil : picked
+                    }
                 })
 
                 VStack(spacing: 16) {
                     BuddyCluster(
                         states: Dictionary(uniqueKeysWithValues: Practice.allCases.map { p in
-                            (p, BuddyCluster.State(fill: stats.fill(p, on: now), status: stats.status(p, on: now),
-                                                   statusLine: stats.statusLine(p, now: now)))
+                            (p, BuddyCluster.State(fill: stats.fill(p, on: day), status: stats.status(p, on: day),
+                                                   statusLine: stats.statusLine(p, on: day, now: now)))
                         }),
-                        onTap: { toggle($0, stats: stats) },
-                        onLongPress: { router.openLogger(for: $0) }
+                        onTap: { toggle($0, stats: stats, day: day) },
+                        onLongPress: { router.openLogger(for: $0, on: isPast ? timestamp(on: day) : nil) }
                     )
-                    summary(doneCount: doneCount)
+                    // A fresh cluster per day, so switching to a day that's already lit doesn't throw confetti.
+                    .id(calendar.startOfDay(for: day))
+                    VStack(spacing: 8) {
+                        summary(doneCount: doneCount)
+                        if isPast {
+                            Button {
+                                withAnimation(.easeInOut(duration: 0.25)) { selectedDay = nil }
+                            } label: {
+                                Text("Back to today")
+                                    .textStyle(Theme.Font.secondary)
+                                    .foregroundStyle(Theme.textSecondary)
+                                    .underline()
+                                    .frame(minHeight: 44)
+                                    .contentShape(Rectangle())
+                            }
+                            .buttonStyle(.plain)
+                        }
+                    }
                 }
                 .frame(maxWidth: .infinity)
 
@@ -87,22 +115,22 @@ struct TodayView: View {
                     ForEach(Array(Practice.allCases.enumerated()), id: \.element) { index, practice in
                         CheckOffRow(
                             practice: practice,
-                            status: stats.status(practice, on: now),
-                            statusLine: stats.statusLine(practice, now: now),
+                            status: stats.status(practice, on: day),
+                            statusLine: stats.statusLine(practice, on: day, now: now),
                             wobbleDelay: -3 * Double(index),
                             onOpen: { router.open(practice) },
-                            onToggle: { toggle(practice, stats: stats) }
+                            onToggle: { toggle(practice, stats: stats, day: day) }
                         )
                         .waveBelow()
                     }
                     MoodQuickRow(
-                        status: moodStatus(latestToday, now: now),
+                        status: moodStatus(latestToday, now: now, isPast: isPast),
                         faces: quickFaces,
                         selected: selectedQuick?.moods.first,
                         onOpenMood: { router.todayPath.append(.mood) },
                         onPick: { mood in
                             withAnimation(.easeOut(duration: 0.2)) {
-                                PracticeActions(context: context, calendar: calendar).quickMood(mood, selected: selectedQuick, now: .now)
+                                PracticeActions(context: context, calendar: calendar).quickMood(mood, selected: selectedQuick, now: timestamp(on: day))
                             }
                         }
                     )
@@ -116,10 +144,11 @@ struct TodayView: View {
         .scrollIndicators(.hidden)
     }
 
-    private func header(now: Date) -> some View {
+    private func header(now: Date, day: Date) -> some View {
         HStack(alignment: .top, spacing: 12) {
             VStack(alignment: .leading, spacing: 6) {
-                Text(Formats.longDay(now, calendar: calendar))
+                Text(Formats.longDay(day, calendar: calendar))
+                    .contentTransition(.opacity)
                     .textStyle(Theme.Font.secondary)
                     .foregroundStyle(Theme.textTertiary)
                 Text(Formats.greeting(at: now, name: firstName, calendar: calendar))
@@ -151,17 +180,25 @@ struct TodayView: View {
             .contentTransition(.numericText())
     }
 
-    private func moodStatus(_ latest: MoodLog?, now: Date) -> String {
-        guard let latest else { return "How are you feeling?" }
+    private func moodStatus(_ latest: MoodLog?, now: Date, isPast: Bool) -> String {
+        guard let latest else { return isPast ? "How did you feel?" : "How are you feeling?" }
         let names = latest.moods.map(\.name).joined(separator: " + ")
         let when = now.timeIntervalSince(latest.loggedAt) < 60 ? "just now" : Formats.time(latest.loggedAt, calendar: calendar)
         return "\(names) · \(when)"
     }
 
-    private func toggle(_ practice: Practice, stats: DayStatsService) {
+    private func toggle(_ practice: Practice, stats: DayStatsService, day: Date) {
         withAnimation(.spring(response: 0.5, dampingFraction: 0.7)) {
-            _ = PracticeActions(context: context, calendar: calendar).toggleCheckOff(practice, stats: stats, now: .now)
+            _ = PracticeActions(context: context, calendar: calendar).toggleCheckOff(practice, stats: stats, now: timestamp(on: day))
         }
+    }
+
+    /// When something logged for `day` happened: now for today, the current time of day for a past day.
+    private func timestamp(on day: Date) -> Date {
+        let now = Date.now
+        guard !calendar.isDate(day, inSameDayAs: now) else { return now }
+        let time = calendar.dateComponents([.hour, .minute], from: now)
+        return calendar.date(bySettingHour: time.hour ?? 12, minute: time.minute ?? 0, second: 0, of: day) ?? day
     }
 }
 

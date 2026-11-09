@@ -8,6 +8,7 @@ struct MeditationView: View {
     @Query(sort: \MeditationLog.loggedAt, order: .reverse) private var sessions: [MeditationLog]
     @AppStorage("meditationGoalMinutes") private var goal = Tokens.Defaults.meditationMinutesPerDay
     @State private var showingLog = false
+    @State private var loggerDate: Date?
 
     var body: some View {
         DayStatsReader { stats in
@@ -61,8 +62,8 @@ struct MeditationView: View {
             .scrollIndicators(.hidden)
         }
         .background(Theme.background.ignoresSafeArea())
-        .floatingAction(color: Practice.meditation.color, label: "Log meditation") { showingLog = true }
-        .fullScreenCover(isPresented: $showingLog) { LogMeditationSheet() }
+        .floatingAction(color: Practice.meditation.color, label: "Log meditation") { loggerDate = nil; showingLog = true }
+        .fullScreenCover(isPresented: $showingLog) { LogMeditationSheet(initialDate: loggerDate) }
         .onAppear(perform: openPendingLogger)
         .onChange(of: router.pendingLogger) { openPendingLogger() }
     }
@@ -70,6 +71,8 @@ struct MeditationView: View {
     private func openPendingLogger() {
         guard router.pendingLogger == .meditation else { return }
         router.pendingLogger = nil
+        loggerDate = router.pendingLoggerDate
+        router.pendingLoggerDate = nil
         showingLog = true
     }
 }
@@ -79,9 +82,14 @@ struct LogMeditationSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
 
-    @State private var when = Date.now
+    @State private var when: Date
     @State private var minutes: Int? = 15
     @State private var kind: MeditationKind?
+
+    /// `initialDate` pre-fills When (a past day picked on Today); nil means now.
+    init(initialDate: Date? = nil) {
+        _when = State(initialValue: initialDate ?? .now)
+    }
 
     var body: some View {
         SheetScaffold {

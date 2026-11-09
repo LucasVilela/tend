@@ -8,6 +8,7 @@ struct ExerciseView: View {
     @Query(sort: \Workout.startedAt, order: .reverse) private var workouts: [Workout]
     @AppStorage("exerciseGoalMinutes") private var goal = Tokens.Defaults.exerciseMinutesPerDay
     @State private var showingLog = false
+    @State private var loggerDate: Date?
 
     var body: some View {
         DayStatsReader { stats in
@@ -61,8 +62,8 @@ struct ExerciseView: View {
             .scrollIndicators(.hidden)
         }
         .background(Theme.background.ignoresSafeArea())
-        .floatingAction(color: Practice.exercise.color, label: "Log workout") { showingLog = true }
-        .fullScreenCover(isPresented: $showingLog) { LogWorkoutSheet() }
+        .floatingAction(color: Practice.exercise.color, label: "Log workout") { loggerDate = nil; showingLog = true }
+        .fullScreenCover(isPresented: $showingLog) { LogWorkoutSheet(startedAt: loggerDate) }
         .onAppear(perform: openPendingLogger)
         .onChange(of: router.pendingLogger) { openPendingLogger() }
     }
@@ -85,6 +86,8 @@ struct ExerciseView: View {
     private func openPendingLogger() {
         guard router.pendingLogger == .exercise else { return }
         router.pendingLogger = nil
+        loggerDate = router.pendingLoggerDate
+        router.pendingLoggerDate = nil
         showingLog = true
     }
 }
@@ -99,6 +102,10 @@ struct LogWorkoutSheet: View {
     @State private var intensity: Intensity = .moderate
     @State private var distance = ""
     @State private var notes = ""
+
+    /// A past day picked on Today; nil logs the workout now (the sheet has no When row).
+    let startedAt: Date?
+    init(startedAt: Date? = nil) { self.startedAt = startedAt }
 
     private let accent = Practice.exercise.color
 
@@ -182,7 +189,7 @@ struct LogWorkoutSheet: View {
     }
 
     private func save() {
-        let now = Date.now
+        let now = startedAt ?? .now
         let km = Double(distance.replacingOccurrences(of: ",", with: "."))
         context.insert(Workout(
             startedAt: now,

@@ -14,6 +14,7 @@ struct JournalView: View {
     @Query(sort: \GuidedTemplate.sortOrder) private var templates: [GuidedTemplate]
 
     @State private var showingLog = false
+    @State private var loggerDate: Date?
     @State private var answering: GuidedTemplate?
     @State private var editing: GuidedEntry?
     @State private var expanded: PersistentIdentifier?
@@ -37,8 +38,8 @@ struct JournalView: View {
             .scrollIndicators(.hidden)
         }
         .background(Theme.background.ignoresSafeArea())
-        .floatingAction(color: Practice.journal.color, label: "Log journaling", visible: mode == .tracker) { showingLog = true }
-        .fullScreenCover(isPresented: $showingLog) { LogJournalingSheet() }
+        .floatingAction(color: Practice.journal.color, label: "Log journaling", visible: mode == .tracker) { loggerDate = nil; showingLog = true }
+        .fullScreenCover(isPresented: $showingLog) { LogJournalingSheet(initialDate: loggerDate) }
         .fullScreenCover(item: $answering) { AnswerTemplateSheet(template: $0) }
         .fullScreenCover(item: $editing) { AnswerTemplateSheet(entry: $0) }
         .onAppear(perform: openPendingLogger)
@@ -48,6 +49,8 @@ struct JournalView: View {
     private func openPendingLogger() {
         guard router.pendingLogger == .journal else { return }
         router.pendingLogger = nil
+        loggerDate = router.pendingLoggerDate
+        router.pendingLoggerDate = nil
         mode = .tracker
         showingLog = true
     }

@@ -36,12 +36,15 @@ final class AppRouter {
     var todayPath: [TodayRoute] = []
     /// Set when a buddy is long-pressed; the practice's tab opens its detailed logger.
     var pendingLogger: Practice?
+    /// The past day Today was showing when the logger was requested (nil = now).
+    var pendingLoggerDate: Date?
 
     func open(_ practice: Practice) {
         tab = AppTab(practice)
     }
 
-    func openLogger(for practice: Practice) {
+    func openLogger(for practice: Practice, on date: Date? = nil) {
+        pendingLoggerDate = date
         pendingLogger = practice
         tab = AppTab(practice)
     }

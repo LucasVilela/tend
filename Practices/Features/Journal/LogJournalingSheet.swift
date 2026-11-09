@@ -6,9 +6,14 @@ struct LogJournalingSheet: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var context
 
-    @State private var when = Date.now
+    @State private var when: Date
     @State private var mood: MoodKind?
     @State private var minutes: Int?
+
+    /// `initialDate` pre-fills When (a past day picked on Today); nil means now.
+    init(initialDate: Date? = nil) {
+        _when = State(initialValue: initialDate ?? .now)
+    }
 
     var body: some View {
         SheetScaffold {

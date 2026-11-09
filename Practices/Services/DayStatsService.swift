@@ -190,15 +190,19 @@ struct DayStatsService {
     // MARK: Copy
 
     /// The status line under each practice on Today: "Done · 7:12 am", "10 of 15 min", "0 of 30 min".
-    func statusLine(_ practice: Practice, now: Date) -> String {
-        let state = status(practice, on: now)
+    /// `day` defaults to today; a past day with no journaling reads "Not logged" instead of "Not yet".
+    func statusLine(_ practice: Practice, on day: Date? = nil, now: Date) -> String {
+        let day = day ?? now
+        let state = status(practice, on: day)
         switch practice {
         case .journal:
-            guard state == .done else { return "Not yet" }
-            return firstJournalTime(on: now).map { "Done · \(Formats.time($0, calendar: calendar))" } ?? "Done"
+            guard state == .done else {
+                return calendar.startOfDay(for: day) < calendar.startOfDay(for: now) ? "Not logged" : "Not yet"
+            }
+            return firstJournalTime(on: day).map { "Done · \(Formats.time($0, calendar: calendar))" } ?? "Done"
         case .meditation, .exercise:
             if state == .done { return "Done" }
-            return "\(minutes(practice, on: now)) of \(goals.minutes(for: practice) ?? 0) min"
+            return "\(minutes(practice, on: day)) of \(goals.minutes(for: practice) ?? 0) min"
         }
     }
 }
