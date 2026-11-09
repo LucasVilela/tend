@@ -53,3 +53,24 @@ The app is dark, minimal and quiet. The one playful touch is a set of blob chara
 - `design/screenshots/`: how every screen should look.
 - `design/mood-faces/`: the 12 mood faces as SVGs.
 - `START_HERE.md`: how to set up Xcode and the prompt to paste into Claude Code.
+
+## Building and running
+Requires Xcode 16 or later (iOS 17+ deployment target). No third-party packages.
+
+1. Open `Practices.xcodeproj` and run the **Practices** scheme on an iPhone simulator or device.
+2. Run the unit tests with ⌘U, or from Terminal:
+   ```bash
+   xcodebuild test -project Practices.xcodeproj -scheme Practices -destination 'platform=iOS Simulator,name=iPhone 17'
+   ```
+3. To see every screen filled with the design's sample data, run `scripts/sim.sh` (it builds, installs and launches on the booted simulator). Debug-only launch arguments open specific screens: `-startTab journal|meditate|exercise|vision`, `-startRoute mood|insights`, `-startLogger journal|meditation|exercise`. Sample data lives in memory only and never touches real data.
+
+The Xcode project is generated from `project.yml` with [XcodeGen](https://github.com/yonaskolb/XcodeGen); the source folders are synced, so new files show up without regenerating. Colours, type and motion come from `design/tokens.json` via `scripts/generate_theme.py`.
+
+## Project layout
+- `Practices/` — the app: `Theme/` (generated tokens, organic shapes), `Models/` (SwiftData), `Services/` (day and mood rules), `Components/` (shared UI, buddies, mood faces), `Features/` (one folder per screen).
+- `PracticesTests/` — unit tests for the rules in `DayStatsService` and `MoodStatsService`.
+- `design/` — the spec, tokens, screenshots, mood-face art and HTML prototypes the app is built from.
+
+## License
+The code is released under the [MIT License](LICENSE).
+The bundled [Geist](https://github.com/vercel/geist-font) font is licensed separately under the SIL Open Font License (`Practices/Resources/Fonts/Geist-OFL.txt`).
