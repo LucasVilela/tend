@@ -3,6 +3,8 @@ import SwiftUI
 /// The custom tab bar: icon over an 11 pt label, active in primary, a wavy line on top.
 struct TabBar: View {
     @Binding var selection: AppTab
+    /// Height above the home indicator: wave (6) + padding (5 + 2) + items (48).
+    static let height: CGFloat = 61
 
     var body: some View {
         VStack(spacing: 0) {

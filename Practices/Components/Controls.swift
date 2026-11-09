@@ -218,11 +218,14 @@ struct FloatingActionButton: View {
 
 extension View {
     /// Places a floating + button at the bottom right, above the tab bar.
-    func floatingAction(color: Color, label: String, action: @escaping () -> Void) -> some View {
+    func floatingAction(color: Color, label: String, visible: Bool = true, action: @escaping () -> Void) -> some View {
         overlay(alignment: .bottomTrailing) {
-            FloatingActionButton(color: color, label: label, action: action)
-                .padding(.trailing, Tokens.Shape.fabTrailingInset)
-                .padding(.bottom, Tokens.Shape.fabAboveTabBar)
+            if visible {
+                FloatingActionButton(color: color, label: label, action: action)
+                    .padding(.trailing, Tokens.Shape.fabTrailingInset)
+                    .padding(.bottom, Tokens.Shape.fabAboveTabBar)
+                    .transition(.scale.combined(with: .opacity))
+            }
         }
     }
 }

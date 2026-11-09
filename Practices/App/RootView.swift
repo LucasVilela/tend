@@ -6,26 +6,27 @@ struct RootView: View {
 
     var body: some View {
         @Bindable var router = router
-        TabView(selection: $router.tab) {
-            NavigationStack(path: $router.todayPath) {
-                TodayView()
-                    .navigationDestination(for: TodayRoute.self) { route in
-                        switch route {
-                        case .insights: PlaceholderScreen(title: "Insights", backTitle: "Today")
-                        case .mood: MoodView()
+        ZStack(alignment: .bottom) {
+            TabView(selection: $router.tab) {
+                NavigationStack(path: $router.todayPath) {
+                    TodayView()
+                        .navigationDestination(for: TodayRoute.self) { route in
+                            switch route {
+                            case .insights: PlaceholderScreen(title: "Insights", backTitle: "Today")
+                            case .mood: MoodView()
+                            }
                         }
-                    }
-            }
-            .toolbar(.hidden, for: .tabBar)
-            .tag(AppTab.today)
+                }
+                .tabContent()
+                .tag(AppTab.today)
 
-            PlaceholderScreen(title: "Journal").toolbar(.hidden, for: .tabBar).tag(AppTab.journal)
-            PlaceholderScreen(title: "Meditation").toolbar(.hidden, for: .tabBar).tag(AppTab.meditate)
-            PlaceholderScreen(title: "Exercise").toolbar(.hidden, for: .tabBar).tag(AppTab.exercise)
-            PlaceholderScreen(title: "Vision").toolbar(.hidden, for: .tabBar).tag(AppTab.vision)
-        }
-        .safeAreaInset(edge: .bottom, spacing: 0) {
+                JournalView().tabContent().tag(AppTab.journal)
+                PlaceholderScreen(title: "Meditation").tabContent().tag(AppTab.meditate)
+                PlaceholderScreen(title: "Exercise").tabContent().tag(AppTab.exercise)
+                PlaceholderScreen(title: "Vision").tabContent().tag(AppTab.vision)
+            }
             TabBar(selection: $router.tab)
+                .ignoresSafeArea(.keyboard)
         }
         .environment(router)
         .background(Theme.background.ignoresSafeArea())
@@ -47,6 +48,14 @@ struct RootView: View {
         }
     }
     #endif
+}
+
+private extension View {
+    /// Hides the system tab bar and keeps content (and floating buttons) clear of the custom one.
+    func tabContent() -> some View {
+        toolbar(.hidden, for: .tabBar)
+            .safeAreaPadding(.bottom, TabBar.height)
+    }
 }
 
 /// Stand-in for screens that later milestones build.
