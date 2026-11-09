@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Guided journal</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&display=swap">
+<style>
+body{margin:0;background:#111113}
+a{color:#ECEAE6}a:hover{color:#FFFFFF}
+button,input,textarea{font:inherit;color:inherit}
+[style*="border-radius: 50%"]:not(.anim):not(.blob-btn){border-radius:58% 42% 54% 46%/47% 55% 45% 53%!important}
+[style*="border-radius: 999px"]{border-radius:26px 18px 24px 16px/18px 25px 16px 23px!important}
+[style*="border-bottom: 1px solid"]{border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left bottom!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"]{border-top-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left top!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"][style*="border-bottom: 1px solid"]{background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9),url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-position:left top,left bottom!important}
+.blob-btn{animation:blobmorph 9s ease-in-out infinite}
+@keyframes blobmorph{0%,100%{border-radius:56% 44% 52% 48%/48% 56% 44% 52%}50%{border-radius:46% 54% 45% 55%/55% 46% 54% 45%}}
+@media (prefers-reduced-motion: reduce){.blob-btn{animation:none}}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #111113; color: #ECEAE6; font-family: Geist, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<main style="position: absolute; inset: 0; overflow-y: auto; box-sizing: border-box; padding: 64px 24px 110px; display: flex; flex-direction: column; gap: 24px">
+
+<header style="display: flex; flex-direction: column; gap: 16px">
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 300; letter-spacing: -0.02em">Journal</h1>
+<nav aria-label="Journal type" style="padding: 3px; border: 1px solid #26262A; border-radius: 999px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 3px">
+<a href="Journal.dc.html" style="height: 44px; border-radius: 999px; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #85838A; text-decoration: none">Tracker</a>
+<a href="GuidedJournal.dc.html" aria-current="page" style="height: 44px; border-radius: 999px; background: #26262A; display: flex; align-items: center; justify-content: center; font-size: 15px; color: #ECEAE6; text-decoration: none">Guided</a>
+</nav>
+</header>
+
+<section aria-labelledby="tpl-h" style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="tpl-h" style="margin: 0; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">Templates</h2>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{templates}}" as="t" hint-placeholder-count="4">
+<li style="border-bottom: 1px solid #222226">
+<a href="GuidedEntry.dc.html" style="min-height: 60px; display: flex; align-items: center; gap: 14px; text-decoration: none; color: #ECEAE6">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; line-height: 20px">{{t.name}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #85838A">{{t.meta}}</span>
+</div>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#85838A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</a>
+</li>
+</sc-for>
+</ul>
+</section>
+
+<section aria-labelledby="ans-h" style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="ans-h" style="margin: 0; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">Your answers</h2>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{entries}}" as="e" hint-placeholder-count="3">
+<li style="border-bottom: 1px solid #222226">
+<button type="button" aria-expanded="{{e.open}}" onClick="{{e.toggle}}" style="width: 100%; min-height: 60px; padding: 0; border: 0; background: transparent; display: flex; align-items: center; gap: 14px; text-align: left; cursor: pointer; color: #ECEAE6">
+<span aria-hidden="true" style="width: 8px; height: 8px; border-radius: 50%; background: #D4A373; flex-shrink: 0"></span>
+<span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; line-height: 20px">{{e.name}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #85838A">{{e.when}}</span>
+</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#85838A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="transform: rotate({{e.rot}}deg); transition: transform .2s"><path d="M6 9l6 6 6-6"></path></svg>
+</button>
+<sc-if value="{{e.open}}" hint-placeholder-val="{{false}}">
+<dl style="margin: 0; padding: 0 0 18px 22px; display: flex; flex-direction: column; gap: 14px">
+<sc-for list="{{e.qa}}" as="x" hint-placeholder-count="4">
+<div style="display: flex; flex-direction: column; gap: 4px">
+<dt style="font-size: 13px; line-height: 18px; color: #85838A">{{x.q}}</dt>
+<dd style="margin: 0; font-size: 15px; line-height: 22px; color: #ECEAE6">{{x.a}}</dd>
+</div>
+</sc-for>
+</dl>
+</sc-if>
+</li>
+</sc-for>
+</ul>
+</section>
+
+</main>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 8px 24px; background: #111113; border-top: 1px solid #222226; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<a href="Main.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="9" cy="9" r="5.2"></circle><circle cx="15" cy="9" r="5.2"></circle><circle cx="12" cy="14.5" r="5.2"></circle></svg>
+Today
+</a>
+<a href="Journal.dc.html" aria-current="page" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #ECEAE6; font-size: 11px; line-height: 13px; font-weight: 500">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-3.5L15.5 5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3L7.5 20H4z"></path><path d="M13.5 7l3.5 3.5"></path></svg>
+Journal
+</a>
+<a href="Meditation.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3.5"></circle></svg>
+Meditate
+</a>
+<a href="Exercise.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"></path></svg>
+Exercise
+</a>
+<a href="Vision.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="9" rx="1.5"></rect><rect x="13" y="4" width="7" height="5" rx="1.5"></rect><rect x="13" y="11" width="7" height="9" rx="1.5"></rect><rect x="4" y="15" width="7" height="5" rx="1.5"></rect></svg>
+Vision
+</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    var open = s.open !== undefined ? s.open : 0;
+    var templates = [
+      { name: "Morning intention", meta: "3 questions · start the day" },
+      { name: "Evening reflection", meta: "4 questions · end the day" },
+      { name: "Gratitude", meta: "3 questions · any time" },
+      { name: "Weekly review", meta: "5 questions · Sundays" }
+    ];
+    var raw = [
+      { name: "Evening reflection", when: "Sun 8 Nov · 9:40 pm", qa: [
+        ["What went well today?", "Cleared the desk and planned the week. Called Mum."],
+        ["What was hard?", "Felt sluggish after lunch and skipped my stretch."],
+        ["What did I learn?", "A short walk fixes the afternoon slump."],
+        ["One thing for tomorrow?", "Phone-free first hour."]
+      ] },
+      { name: "Gratitude", when: "Sat 7 Nov · 6:15 pm", qa: [
+        ["Three things I'm grateful for", "Sun on the harbour, a slow coffee, finishing the book."],
+        ["Someone who helped me lately", "Sam, for covering my shift on Thursday."],
+        ["A small pleasure from today", "The first cold swim of the season."]
+      ] },
+      { name: "Morning intention", when: "Fri 6 Nov · 7:05 am", qa: [
+        ["How do I want to feel today?", "Steady."],
+        ["What matters most today?", "Finish the report draft."],
+        ["One kind thing I can do", "Message Dad."]
+      ] }
+    ];
+    var entries = raw.map(function (e, i) {
+      var isOpen = open === i;
+      return {
+        name: e.name, when: e.when, open: isOpen, rot: isOpen ? 180 : 0,
+        qa: e.qa.map(function (p) { return { q: p[0], a: p[1] }; }),
+        toggle: function () { self.setState({ open: isOpen ? -1 : i }); }
+      };
+    });
+    return { templates: templates, entries: entries };
+  }
+}
+</script>
+</body>
+</html>

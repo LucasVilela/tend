@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Log journaling</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&display=swap">
+<style>
+body{margin:0;background:#111113}
+a{color:#ECEAE6}a:hover{color:#FFFFFF}
+button,input,textarea{font:inherit;color:inherit}
+[style*="border-radius: 50%"]:not(.anim):not(.blob-btn){border-radius:58% 42% 54% 46%/47% 55% 45% 53%!important}
+[style*="border-radius: 999px"]{border-radius:26px 18px 24px 16px/18px 25px 16px 23px!important}
+[style*="border-bottom: 1px solid"]{border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left bottom!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"]{border-top-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left top!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"][style*="border-bottom: 1px solid"]{background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9),url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-position:left top,left bottom!important}
+.blob-btn{animation:blobmorph 9s ease-in-out infinite}
+@keyframes blobmorph{0%,100%{border-radius:56% 44% 52% 48%/48% 56% 44% 52%}50%{border-radius:46% 54% 45% 55%/55% 46% 54% 45%}}
+[style*="border-width: 0px 0px 1px"]{border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left bottom!important;background-size:96px 6px!important}
+[style*="border-width: 1px 0px;"]{border-top-color:transparent!important;border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9),url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left top,left bottom!important;background-size:96px 6px!important}
+@media (prefers-reduced-motion: reduce){.blob-btn{animation:none}}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #111113; color: #ECEAE6; font-family: Geist, -apple-system, 'Segoe UI', Roboto, sans-serif; display: flex; flex-direction: column">
+
+<header style="flex-shrink: 0; padding: 52px 14px 0; display: grid; grid-template-columns: 64px minmax(0, 1fr) 64px; align-items: center">
+<a href="Journal.dc.html" aria-label="Close without logging" style="width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; color: #A3A1A7; text-decoration: none">
+<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg>
+</a>
+<h1 style="margin: 0; text-align: center; font-size: 15px; line-height: 20px; font-weight: 500">Log journaling</h1>
+<span aria-hidden="true"></span>
+</header>
+
+<main style="flex: 1; min-height: 0; overflow-y: auto; box-sizing: border-box; padding: 28px 24px 24px; display: flex; flex-direction: column; gap: 36px">
+
+<p style="margin: 0; font-size: 24px; line-height: 32px; font-weight: 300; letter-spacing: -0.01em; color: #ECEAE6; text-wrap: pretty">Wrote today? Log it here. Your words stay wherever you keep them.</p>
+
+<button type="button" style="min-height: 56px; padding: 0; border: 0; border-top: 1px solid #222226; border-bottom: 1px solid #222226; background: transparent; display: flex; align-items: center; gap: 12px; cursor: pointer; text-align: left">
+<span style="flex: 1; font-size: 16px; line-height: 20px; color: #ECEAE6">When</span>
+<span style="font-size: 15px; line-height: 20px; color: #A3A1A7">Today, 8:40 pm</span>
+<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#85838A" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 6l6 6-6 6"></path></svg>
+</button>
+
+<section role="group" aria-labelledby="mood-h" style="display: flex; flex-direction: column; gap: 12px">
+<h2 id="mood-h" style="margin: 0; display: flex; justify-content: space-between; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">How do you feel? <span>optional</span></h2>
+<div style="margin: 0 -24px; padding: 4px 24px 2px; display: flex; gap: 2px; overflow-x: auto; scrollbar-width: none">
+<sc-for list="{{moods}}" as="m" hint-placeholder-count="12">
+<button type="button" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}" style="flex: 0 0 64px; min-height: 74px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; gap: 8px; opacity: {{m.op}}; transition: opacity .2s; cursor: pointer">
+<span style="width: 38px; height: 38px; margin-top: 6px; border-radius: 50%; background: {{m.f.color}}; box-shadow: {{m.ring}}; transform: scale({{m.scale}}); transition: transform .2s, box-shadow .2s; display: block"><svg width="38" height="38" viewBox="0 0 100 100" aria-hidden="true" style="overflow: visible; display: block"><ellipse cx="26" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{m.f.cheeks}}"></ellipse><ellipse cx="74" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{m.f.cheeks}}"></ellipse><path d="{{m.f.brows}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round"></path><path d="{{m.f.eyes}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.eyeFill}}" fill="#1A1A1F"></path><path d="{{m.f.mouth}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.mouthFill}}" fill="#1A1A1F"></path><path d="{{m.f.extra}}" fill="none" stroke="#1A1A1F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.extraFill}}" fill="{{m.f.extraFillColor}}"></path></svg></span>
+<span style="font-size: 12px; line-height: 16px; color: {{m.fg}}; white-space: nowrap">{{m.label}}</span>
+</button>
+</sc-for>
+</div>
+</section>
+
+<section role="group" aria-labelledby="len-h" style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="len-h" style="margin: 0; display: flex; justify-content: space-between; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">How long? <span>optional</span></h2>
+<div style="display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<sc-for list="{{lengths}}" as="d" hint-placeholder-count="5">
+<button type="button" aria-pressed="{{d.pressed}}" aria-label="{{d.aria}}" onClick="{{d.pick}}" style="height: 52px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; font-size: 16px; font-variant-numeric: tabular-nums; color: {{d.fg}}; cursor: pointer">
+{{d.label}}
+<span style="width: 4px; height: 4px; border-radius: 50%; background: {{d.dot}}"></span>
+</button>
+</sc-for>
+</div>
+<p style="margin: 0; text-align: center; font-size: 12px; line-height: 16px; color: #85838A">minutes</p>
+</section>
+
+</main>
+
+<div style="flex-shrink: 0; padding: 12px 24px 32px">
+<a href="Journal.dc.html" style="height: 54px; border-radius: 999px; background: #D4A373; color: #111113; display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 16px; font-weight: 500; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+Log journaling
+</a>
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    var mood = s.mood !== undefined ? s.mood : null;
+    var len = s.len !== undefined ? s.len : null;
+    // Mood faces — shared with Today and Mood. Drawn in a 100×100 box.
+    var FACES = {
+      happy: { name: "Happy", color: "#F2D27A", cheeks: 1, eyeFill: "M33 42a3.5 4.5 0 1 0 7 0a3.5 4.5 0 1 0 -7 0M60 42a3.5 4.5 0 1 0 7 0a3.5 4.5 0 1 0 -7 0", mouth: "M34 59Q50 76 66 59" },
+      calm: { name: "Calm", color: "#8FBCD9", cheeks: 0.6, eyes: "M30 44Q36 49 42 44M58 44Q64 49 70 44", mouth: "M41 62Q50 68 59 62" },
+      excited: { name: "Excited", color: "#F29EB4", cheeks: 1, eyes: "M30 46Q36 37 42 46M58 46Q64 37 70 46", mouthFill: "M33 57Q50 82 67 57Z", extra: "M84 14v9M79.5 18.5h9M16 16v7M12.5 19.5h7" },
+      grateful: { name: "Grateful", color: "#F2B482", cheeks: 1, eyes: "M30 45Q36 39 42 45M58 45Q64 39 70 45", mouth: "M40 60Q50 70 60 60", extraFill: "M82 16c-2.5-4-9-2.5-8.3 2.5.6 4.3 8.3 8.5 8.3 8.5s7.7-4.2 8.3-8.5c.7-5-5.8-6.5-8.3-2.5z", extraFillColor: "#E2685C" },
+      bleh: { name: "Bleh", color: "#ABA98E", eyes: "M30 42h12M58 42h12", eyeFill: "M32.5 43a3.5 3 0 0 0 7 0zM60.5 43a3.5 3 0 0 0 7 0z", mouth: "M38 64L62 60" },
+      badsleep: { name: "Bad sleep", color: "#9497C2", eyes: "M30 43Q36 47 42 43M58 43Q64 47 70 43M32 51Q36 53.5 40 51M60 51Q64 53.5 68 51", mouthFill: "M45.5 65a4.5 5.5 0 1 0 9 0a4.5 5.5 0 1 0 -9 0", extra: "M68 20h7l-7 8h7M79 11h5l-5 6h5" },
+      anxious: { name: "Anxious", color: "#8DCBBE", brows: "M29 31Q35 27 42 30M71 31Q65 27 58 30", eyes: "M31 42a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0M58 42a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0", eyeFill: "M34.8 43a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0M61.8 43a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", mouth: "M35 64q3.75-4 7.5 0t7.5 0t7.5 0t7.5 0", extraFill: "M84 26c-3 5-4.5 7.5-4.5 9.5a4.5 4.5 0 0 0 9 0c0-2-1.5-4.5-4.5-9.5z", extraFillColor: "#EAF6F3" },
+      stressed: { name: "Stressed", color: "#E3A15F", eyes: "M32 38l8 8M40 38l-8 8M60 38l8 8M68 38l-8 8", mouth: "M35 64l5-4 5 4 5-4 5 4 5-4 5 4" },
+      sad: { name: "Sad", color: "#7F98CC", brows: "M29 35Q35 30 42 33M71 35Q65 30 58 33", eyeFill: "M33 43a3.5 4 0 1 0 7 0a3.5 4 0 1 0 -7 0M60 43a3.5 4 0 1 0 7 0a3.5 4 0 1 0 -7 0", mouth: "M38 67Q50 57 62 67", extraFill: "M36.5 52c-2 3.5-3 5.5-3 7a3 3 0 0 0 6 0c0-1.5-1-3.5-3-7z", extraFillColor: "#E6EEFA" },
+      lonely: { name: "Lonely", color: "#C7A0C9", brows: "M29 38Q33 35 37 35.5M70 38Q66 35 62 35.5", eyeFill: "M31 47a3 3.5 0 1 0 6 0a3 3.5 0 1 0 -6 0M58 47a3 3.5 0 1 0 6 0a3 3.5 0 1 0 -6 0", mouth: "M41 66Q47 62 53 66" },
+      angry: { name: "Angry", color: "#E8876C", brows: "M29 32L42 37M71 32L58 37", eyeFill: "M33 44a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0M60 44a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0", mouth: "M38 66Q50 58 62 66" },
+      mad: { name: "Mad", color: "#D65A50", brows: "M28 30L43 38M72 30L57 38", eyes: "M33 44h7M60 44h7", mouth: "M36 59h28v9h-28zM43 59v9M50 59v9M57 59v9", extra: "M14 26q-4-4 0-8t0-8M24 22q-4-4 0-8t0-8M76 22q4-4 0-8t0-8M86 26q4-4 0-8t0-8" }
+    };
+    var MOOD_ORDER = ["happy", "calm", "excited", "grateful", "bleh", "badsleep", "anxious", "stressed", "sad", "lonely", "angry", "mad"];
+    var faceOf = function (k) {
+      var x = FACES[k];
+      return { key: k, name: x.name, color: x.color, cheeks: x.cheeks || 0, brows: x.brows || "", eyes: x.eyes || "", eyeFill: x.eyeFill || "", mouth: x.mouth || "", mouthFill: x.mouthFill || "", extra: x.extra || "", extraFill: x.extraFill || "", extraFillColor: x.extraFillColor || "#1A1A1F" };
+    };
+    // Optional: one mood, also saved as a mood check-in.
+    var moods = MOOD_ORDER.map(function (k) {
+      var on = k === mood;
+      var fc = faceOf(k);
+      return {
+        f: fc, label: fc.name, pressed: on,
+        op: mood && !on ? 0.5 : 1,
+        scale: on ? 1.1 : 1,
+        ring: on ? "0 0 0 2.5px #111113, 0 0 0 4.5px " + fc.color : "none",
+        fg: on ? "#ECEAE6" : "#85838A",
+        pick: function () { self.setState({ mood: on ? null : k }); }
+      };
+    });
+    var lengths = [5, 10, 15, 20, 30].map(function (m) {
+      var on = m === len;
+      return {
+        label: m === 30 ? "30+" : String(m),
+        aria: (m === 30 ? "30 or more" : m) + " minutes",
+        pressed: on,
+        fg: on ? "#ECEAE6" : "#85838A",
+        dot: on ? "#D4A373" : "transparent",
+        pick: function () { self.setState({ len: on ? null : m }); }
+      };
+    });
+    return { moods: moods, lengths: lengths };
+  }
+}
+</script>
+</body>
+</html>

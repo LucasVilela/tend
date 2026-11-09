@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Mood</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@300..600&display=swap">
+<style>
+body{margin:0;background:#111113}
+a{color:#ECEAE6}a:hover{color:#FFFFFF}
+button,input,textarea{font:inherit;color:inherit}
+[style*="border-radius: 50%"]:not(.anim):not(.blob-btn){border-radius:58% 42% 54% 46%/47% 55% 45% 53%!important}
+[style*="border-radius: 999px"]{border-radius:26px 18px 24px 16px/18px 25px 16px 23px!important}
+[style*="border-bottom: 1px solid"]{border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left bottom!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"]{border-top-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left top!important;background-size:96px 6px!important}
+[style*="border-top: 1px solid"][style*="border-bottom: 1px solid"]{background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9),url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-position:left top,left bottom!important}
+.blob-btn{animation:blobmorph 9s ease-in-out infinite}
+@keyframes blobmorph{0%,100%{border-radius:56% 44% 52% 48%/48% 56% 44% 52%}50%{border-radius:46% 54% 45% 55%/55% 46% 54% 45%}}
+[style*="border-width: 0px 0px 1px"]{border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left bottom!important;background-size:96px 6px!important}
+[style*="border-width: 1px 0px;"]{border-top-color:transparent!important;border-bottom-color:transparent!important;background-image:url(/_blob/e00e9539ee07a59e5be730af0b7432e9),url(/_blob/e00e9539ee07a59e5be730af0b7432e9)!important;background-repeat:repeat-x!important;background-position:left top,left bottom!important;background-size:96px 6px!important}
+@media (prefers-reduced-motion: reduce){.blob-btn{animation:none}}
+input::placeholder{color:#85838A;opacity:1}
+input:focus{outline:none}
+@keyframes popA{0%{transform:scale(1)}28%{transform:scale(1.12,0.9)}52%{transform:scale(0.94,1.08)}74%{transform:scale(1.04,0.98)}100%{transform:scale(1)}}
+@keyframes popB{0%{transform:scale(1)}28%{transform:scale(1.12,0.9)}52%{transform:scale(0.94,1.08)}74%{transform:scale(1.04,0.98)}100%{transform:scale(1)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes morph{0%,100%{border-radius:46% 54% 52% 48%/50% 46% 54% 50%}33%{border-radius:54% 46% 48% 52%/54% 54% 46% 46%}66%{border-radius:50% 50% 56% 44%/46% 52% 48% 54%}}
+@keyframes blink{0%,90%,100%{transform:scaleY(1)}94%{transform:scaleY(0.1)}}
+@media (prefers-reduced-motion: reduce){.anim{animation:none!important}}
+</style>
+</helmet>
+<div style="position: relative; width: 390px; height: 844px; overflow: hidden; background: #111113; color: #ECEAE6; font-family: Geist, -apple-system, 'Segoe UI', Roboto, sans-serif">
+<main style="position: absolute; inset: 0; overflow-y: auto; box-sizing: border-box; padding: 48px 24px 110px; display: flex; flex-direction: column; gap: 28px">
+
+<header style="display: flex; flex-direction: column; gap: 6px">
+<a href="Main.dc.html" style="align-self: flex-start; height: 44px; margin-left: -8px; padding: 0 8px; display: flex; align-items: center; gap: 4px; font-size: 15px; color: #A3A1A7; text-decoration: none">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 6l-6 6 6 6"></path></svg>
+Today
+</a>
+<h1 style="margin: 0; font-size: 28px; line-height: 34px; font-weight: 300; letter-spacing: -0.02em">Mood</h1>
+</header>
+
+<section aria-label="Lately" style="display: flex; flex-direction: column; align-items: center; gap: 18px">
+<div role="img" aria-label="{{faceLabel}}" class="anim" style="position: relative; width: 168px; height: 168px; margin-top: 8px; animation: {{pop}}">
+<div class="anim" style="position: absolute; inset: 0; animation: bob 5.8s ease-in-out infinite">
+<div class="anim" style="position: absolute; inset: 0; background: {{top.color}}; box-shadow: 0 0 64px {{glow}}; transition: background .6s, box-shadow .6s; animation: morph 9s ease-in-out infinite"></div>
+<svg width="168" height="168" viewBox="0 0 100 100" aria-hidden="true" style="position: absolute; inset: 0; overflow: visible"><ellipse cx="26" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{top.cheeks}}"></ellipse><ellipse cx="74" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{top.cheeks}}"></ellipse><path d="{{top.brows}}" fill="none" stroke="#1A1A1F" stroke-width="3.2" stroke-linecap="round"></path><g class="anim" style="transform-box: fill-box; transform-origin: center; animation: blink 4.6s ease-in-out infinite"><path d="{{top.eyes}}" fill="none" stroke="#1A1A1F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{top.eyeFill}}" fill="#1A1A1F"></path></g><path d="{{top.mouth}}" fill="none" stroke="#1A1A1F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{top.mouthFill}}" fill="#1A1A1F"></path><path d="{{top.extra}}" fill="none" stroke="#1A1A1F" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{top.extraFill}}" fill="{{top.extraFillColor}}"></path></svg>
+</div>
+</div>
+<p style="margin: 0; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center">
+<span style="font-size: 14px; line-height: 18px; color: #85838A">Lately you're mostly</span>
+<span style="font-size: 32px; line-height: 38px; font-weight: 300; letter-spacing: -0.02em; color: {{top.color}}; transition: color .6s">{{top.name}}</span>
+<sc-if value="{{hasSecond}}" hint-placeholder-val="{{true}}">
+<span style="font-size: 15px; line-height: 20px; color: #A3A1A7">with some <span style="color: {{secondColor}}">{{second}}</span></span>
+</sc-if>
+<span style="margin-top: 6px; font-size: 12px; line-height: 16px; color: #85838A">From your last 5 check-ins · the newest count most</span>
+</p>
+</section>
+
+<section role="group" aria-labelledby="now-h" style="display: flex; flex-direction: column; gap: 14px">
+<h2 id="now-h" style="margin: 0; display: flex; justify-content: space-between; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">How are you feeling? <span style="font-variant-numeric: tabular-nums">{{pickHint}}</span></h2>
+<div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); row-gap: 8px">
+<sc-for list="{{grid}}" as="m" hint-placeholder-count="12">
+<button type="button" aria-pressed="{{m.pressed}}" onClick="{{m.pick}}" style="min-height: 78px; border: 0; background: transparent; padding: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; gap: 8px; opacity: {{m.op}}; transition: opacity .2s; cursor: pointer">
+<span style="width: 44px; height: 44px; margin-top: 6px; border-radius: 50%; background: {{m.f.color}}; box-shadow: {{m.ring}}; transform: scale({{m.scale}}); transition: transform .2s, box-shadow .2s; display: block"><svg width="44" height="44" viewBox="0 0 100 100" aria-hidden="true" style="overflow: visible; display: block"><ellipse cx="26" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{m.f.cheeks}}"></ellipse><ellipse cx="74" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{m.f.cheeks}}"></ellipse><path d="{{m.f.brows}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round"></path><path d="{{m.f.eyes}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.eyeFill}}" fill="#1A1A1F"></path><path d="{{m.f.mouth}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.mouthFill}}" fill="#1A1A1F"></path><path d="{{m.f.extra}}" fill="none" stroke="#1A1A1F" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{m.f.extraFill}}" fill="{{m.f.extraFillColor}}"></path></svg></span>
+<span style="font-size: 12px; line-height: 16px; color: {{m.fg}}; white-space: nowrap">{{m.label}}</span>
+</button>
+</sc-for>
+</div>
+<sc-if value="{{hasSel}}" hint-placeholder-val="{{false}}">
+<div style="display: flex; flex-direction: column; gap: 16px">
+<input aria-label="Note (optional)" type="text" placeholder="Add a note (optional)" value="{{note}}" onChange="{{onNote}}" style="height: 40px; border: 0; border-bottom: 1px solid #2A2A2F; background: transparent; padding: 0; font-size: 16px; color: #ECEAE6">
+<button type="button" onClick="{{log}}" style="height: 52px; border: 0; border-radius: 999px; background: #8FBCD9; color: #111113; font-size: 16px; font-weight: 500; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>
+{{logLabel}}
+</button>
+</div>
+</sc-if>
+</section>
+
+<p style="margin: 0; font-size: 15px; line-height: 22px; color: #A3A1A7; text-wrap: pretty"><span style="color: #8DCBBE">Anxious</span> showed up twice this week, both on days you skipped exercise. <span style="color: #8FBCD9">Calm</span> tends to follow your meditation days.</p>
+
+<section aria-labelledby="log-h" style="display: flex; flex-direction: column; gap: 6px">
+<h2 id="log-h" style="margin: 0; font-size: 14px; line-height: 18px; font-weight: 400; color: #85838A">Check-ins</h2>
+<ul style="list-style: none; margin: 0; padding: 0">
+<sc-for list="{{logs}}" as="l" hint-placeholder-count="6">
+<li style="min-height: 62px; display: flex; align-items: center; gap: 14px; border-bottom: 1px solid #222226">
+<div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+<span style="font-size: 16px; line-height: 20px">{{l.name}}</span>
+<span style="font-size: 13px; line-height: 18px; color: #85838A; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.meta}}</span>
+</div>
+<span aria-hidden="true" style="display: flex; align-items: center; flex-shrink: 0; padding-left: 4px; isolation: isolate">
+<sc-for list="{{l.faces}}" as="x" hint-placeholder-count="1">
+<span style="width: 30px; height: 30px; margin-left: {{x.ml}}px; position: relative; z-index: {{x.z}}; border-radius: 50%; background: {{x.f.color}}; box-shadow: 0 0 0 2.5px #111113; display: block; flex-shrink: 0"><svg width="30" height="30" viewBox="0 0 100 100" aria-hidden="true" style="overflow: visible; display: block"><ellipse cx="26" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{x.f.cheeks}}"></ellipse><ellipse cx="74" cy="56" rx="8" ry="4.5" fill="rgba(226,104,92,0.5)" opacity="{{x.f.cheeks}}"></ellipse><path d="{{x.f.brows}}" fill="none" stroke="#1A1A1F" stroke-width="4.5" stroke-linecap="round"></path><path d="{{x.f.eyes}}" fill="none" stroke="#1A1A1F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{x.f.eyeFill}}" fill="#1A1A1F"></path><path d="{{x.f.mouth}}" fill="none" stroke="#1A1A1F" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{x.f.mouthFill}}" fill="#1A1A1F"></path><path d="{{x.f.extra}}" fill="none" stroke="#1A1A1F" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"></path><path d="{{x.f.extraFill}}" fill="{{x.f.extraFillColor}}"></path></svg></span>
+</sc-for>
+</span>
+</li>
+</sc-for>
+</ul>
+</section>
+
+</main>
+
+<nav aria-label="Main" style="position: absolute; left: 0; right: 0; bottom: 0; padding: 8px 8px 24px; background: #111113; border-top: 1px solid #222226; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr))">
+<a href="Main.dc.html" aria-current="page" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #ECEAE6; font-size: 11px; line-height: 13px; font-weight: 500">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="9" cy="9" r="5.2"></circle><circle cx="15" cy="9" r="5.2"></circle><circle cx="12" cy="14.5" r="5.2"></circle></svg>
+Today
+</a>
+<a href="Journal.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20v-3.5L15.5 5a2.1 2.1 0 0 1 3 0l.5.5a2.1 2.1 0 0 1 0 3L7.5 20H4z"></path><path d="M13.5 7l3.5 3.5"></path></svg>
+Journal
+</a>
+<a href="Meditation.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" aria-hidden="true"><circle cx="12" cy="12" r="8"></circle><circle cx="12" cy="12" r="3.5"></circle></svg>
+Meditate
+</a>
+<a href="Exercise.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 12h4l2.5-6 5 12 2.5-6h4"></path></svg>
+Exercise
+</a>
+<a href="Vision.dc.html" style="min-height: 48px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; text-decoration: none; color: #85838A; font-size: 11px; line-height: 13px">
+<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="4" width="7" height="9" rx="1.5"></rect><rect x="13" y="4" width="7" height="5" rx="1.5"></rect><rect x="13" y="11" width="7" height="9" rx="1.5"></rect><rect x="4" y="15" width="7" height="5" rx="1.5"></rect></svg>
+Vision
+</a>
+</nav>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  renderVals() {
+    var self = this;
+    var s = this.state || {};
+    // Mood faces — shared with Today and Log journaling. Drawn in a 100×100 box.
+    var FACES = {
+      happy: { name: "Happy", color: "#F2D27A", cheeks: 1, eyeFill: "M33 42a3.5 4.5 0 1 0 7 0a3.5 4.5 0 1 0 -7 0M60 42a3.5 4.5 0 1 0 7 0a3.5 4.5 0 1 0 -7 0", mouth: "M34 59Q50 76 66 59" },
+      calm: { name: "Calm", color: "#8FBCD9", cheeks: 0.6, eyes: "M30 44Q36 49 42 44M58 44Q64 49 70 44", mouth: "M41 62Q50 68 59 62" },
+      excited: { name: "Excited", color: "#F29EB4", cheeks: 1, eyes: "M30 46Q36 37 42 46M58 46Q64 37 70 46", mouthFill: "M33 57Q50 82 67 57Z", extra: "M84 14v9M79.5 18.5h9M16 16v7M12.5 19.5h7" },
+      grateful: { name: "Grateful", color: "#F2B482", cheeks: 1, eyes: "M30 45Q36 39 42 45M58 45Q64 39 70 45", mouth: "M40 60Q50 70 60 60", extraFill: "M82 16c-2.5-4-9-2.5-8.3 2.5.6 4.3 8.3 8.5 8.3 8.5s7.7-4.2 8.3-8.5c.7-5-5.8-6.5-8.3-2.5z", extraFillColor: "#E2685C" },
+      bleh: { name: "Bleh", color: "#ABA98E", eyes: "M30 42h12M58 42h12", eyeFill: "M32.5 43a3.5 3 0 0 0 7 0zM60.5 43a3.5 3 0 0 0 7 0z", mouth: "M38 64L62 60" },
+      badsleep: { name: "Bad sleep", color: "#9497C2", eyes: "M30 43Q36 47 42 43M58 43Q64 47 70 43M32 51Q36 53.5 40 51M60 51Q64 53.5 68 51", mouthFill: "M45.5 65a4.5 5.5 0 1 0 9 0a4.5 5.5 0 1 0 -9 0", extra: "M68 20h7l-7 8h7M79 11h5l-5 6h5" },
+      anxious: { name: "Anxious", color: "#8DCBBE", brows: "M29 31Q35 27 42 30M71 31Q65 27 58 30", eyes: "M31 42a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0M58 42a5.5 5.5 0 1 0 11 0a5.5 5.5 0 1 0 -11 0", eyeFill: "M34.8 43a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0M61.8 43a1.8 1.8 0 1 0 3.6 0a1.8 1.8 0 1 0 -3.6 0", mouth: "M35 64q3.75-4 7.5 0t7.5 0t7.5 0t7.5 0", extraFill: "M84 26c-3 5-4.5 7.5-4.5 9.5a4.5 4.5 0 0 0 9 0c0-2-1.5-4.5-4.5-9.5z", extraFillColor: "#EAF6F3" },
+      stressed: { name: "Stressed", color: "#E3A15F", eyes: "M32 38l8 8M40 38l-8 8M60 38l8 8M68 38l-8 8", mouth: "M35 64l5-4 5 4 5-4 5 4 5-4 5 4" },
+      sad: { name: "Sad", color: "#7F98CC", brows: "M29 35Q35 30 42 33M71 35Q65 30 58 33", eyeFill: "M33 43a3.5 4 0 1 0 7 0a3.5 4 0 1 0 -7 0M60 43a3.5 4 0 1 0 7 0a3.5 4 0 1 0 -7 0", mouth: "M38 67Q50 57 62 67", extraFill: "M36.5 52c-2 3.5-3 5.5-3 7a3 3 0 0 0 6 0c0-1.5-1-3.5-3-7z", extraFillColor: "#E6EEFA" },
+      lonely: { name: "Lonely", color: "#C7A0C9", brows: "M29 38Q33 35 37 35.5M70 38Q66 35 62 35.5", eyeFill: "M31 47a3 3.5 0 1 0 6 0a3 3.5 0 1 0 -6 0M58 47a3 3.5 0 1 0 6 0a3 3.5 0 1 0 -6 0", mouth: "M41 66Q47 62 53 66" },
+      angry: { name: "Angry", color: "#E8876C", brows: "M29 32L42 37M71 32L58 37", eyeFill: "M33 44a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0M60 44a3.5 3.5 0 1 0 7 0a3.5 3.5 0 1 0 -7 0", mouth: "M38 66Q50 58 62 66" },
+      mad: { name: "Mad", color: "#D65A50", brows: "M28 30L43 38M72 30L57 38", eyes: "M33 44h7M60 44h7", mouth: "M36 59h28v9h-28zM43 59v9M50 59v9M57 59v9", extra: "M14 26q-4-4 0-8t0-8M24 22q-4-4 0-8t0-8M76 22q4-4 0-8t0-8M86 26q4-4 0-8t0-8" }
+    };
+    var MOOD_ORDER = ["happy", "calm", "excited", "grateful", "bleh", "badsleep", "anxious", "stressed", "sad", "lonely", "angry", "mad"];
+    var faceOf = function (k) {
+      var x = FACES[k];
+      return { key: k, name: x.name, color: x.color, cheeks: x.cheeks || 0, brows: x.brows || "", eyes: x.eyes || "", eyeFill: x.eyeFill || "", mouth: x.mouth || "", mouthFill: x.mouthFill || "", extra: x.extra || "", extraFill: x.extraFill || "", extraFillColor: x.extraFillColor || "#1A1A1F" };
+    };
+    var nameList = function (keys) { return keys.map(function (k) { return FACES[k].name; }).join(" + "); };
+
+    // Check-ins, newest first. A check-in can hold up to 3 moods.
+    var base = [
+      [["calm"], "Today · 1:15 pm"],
+      [["anxious", "badsleep"], "Today · 7:30 am · Slept badly"],
+      [["happy"], "Sun 8 Nov · 9:00 pm · Dinner with friends"],
+      [["grateful"], "Sat 7 Nov · 6:00 pm · Long walk by the water"],
+      [["anxious"], "Fri 6 Nov · 10:00 pm · Work stress"],
+      [["bleh"], "Wed 4 Nov · 3:00 pm"]
+    ];
+    var added = s.added || [];
+    var all = added.concat(base);
+
+    // "Lately" = weighted count over the last 5 check-ins (weights 5,4,3,2,1).
+    // Every mood in a check-in gets that check-in's weight. Ties go to the most recent.
+    var score = {}, seen = {}, n = 0;
+    all.slice(0, 5).forEach(function (r, i) {
+      r[0].forEach(function (k) {
+        score[k] = (score[k] || 0) + (5 - i);
+        if (seen[k] === undefined) seen[k] = n++;
+      });
+    });
+    var ranked = Object.keys(score).sort(function (a, b) { return score[b] - score[a] || seen[a] - seen[b]; });
+    var top = faceOf(ranked[0]);
+    var second = ranked[1] && score[ranked[1]] >= 3 ? FACES[ranked[1]] : null;
+
+    var sel = s.sel || [];
+    var count = s.count || 0;
+    var note = s.note || "";
+    var grid = MOOD_ORDER.map(function (k) {
+      var on = sel.indexOf(k) >= 0;
+      var full = sel.length >= 3 && !on;
+      var fc = faceOf(k);
+      return {
+        f: fc, label: fc.name, pressed: on,
+        op: full ? 0.35 : 1,
+        scale: on ? 1.08 : 1,
+        ring: on ? "0 0 0 2.5px #111113, 0 0 0 4.5px " + fc.color : "none",
+        fg: on ? "#ECEAE6" : "#85838A",
+        pick: function () {
+          if (on) self.setState({ sel: sel.filter(function (x) { return x !== k; }) });
+          else if (!full) self.setState({ sel: sel.concat([k]) });
+        }
+      };
+    });
+    var logs = all.slice(0, 6).map(function (r) {
+      return {
+        name: nameList(r[0]),
+        meta: r[1],
+        faces: r[0].map(function (k, i) { return { f: faceOf(k), ml: i ? -10 : 0, z: 3 - i }; })
+      };
+    });
+
+    return {
+      top: top,
+      glow: top.color + "40",
+      faceLabel: "Lately you're mostly " + top.name + (second ? ", with some " + second.name : ""),
+      hasSecond: !!second,
+      second: second ? second.name : "",
+      secondColor: second ? second.color : "#85838A",
+      pop: count ? (count % 2 ? "popA" : "popB") + " .7s ease-out" : "none",
+      grid: grid,
+      pickHint: sel.length ? sel.length + " of 3" : "Pick up to 3",
+      hasSel: sel.length > 0,
+      logLabel: "Log " + nameList(sel),
+      note: note,
+      onNote: function (e) { self.setState({ note: e.target.value }); },
+      log: function () {
+        var meta = "Today · just now" + (note.trim() ? " · " + note.trim() : "");
+        self.setState({ added: [[sel, meta]].concat(added), sel: [], note: "", count: count + 1 });
+      },
+      logs: logs
+    };
+  }
+}
+</script>
+</body>
+</html>
