@@ -2,7 +2,7 @@ import SwiftUI
 
 /// Line icons from the design files, drawn in a 24 × 24 box.
 enum Icon {
-    case today, journal, meditate, exercise, vision, chart, plus, chevronLeft, chevronRight, close, check
+    case today, journal, meditate, exercise, vision, chart, plus, minus, chevronLeft, chevronRight, close, check
 
     init(_ tab: AppTab) {
         switch tab {
@@ -38,6 +38,8 @@ enum Icon {
             p.addPath(SVGPath.path("M6 19V13M12 19V6M18 19v-9"))
         case .plus:
             p.addPath(SVGPath.path("M12 6v12M6 12h12"))
+        case .minus:
+            p.addPath(SVGPath.path("M6 12h12"))
         case .chevronLeft:
             p.addPath(SVGPath.path("M15 6l-6 6 6 6"))
         case .chevronRight:
