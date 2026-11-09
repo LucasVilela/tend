@@ -12,7 +12,7 @@ struct RootView: View {
                     TodayView()
                         .navigationDestination(for: TodayRoute.self) { route in
                             switch route {
-                            case .insights: PlaceholderScreen(title: "Insights", backTitle: "Today")
+                            case .insights: InsightsView()
                             case .mood: MoodView()
                             }
                         }
