@@ -116,13 +116,13 @@ enum SVGPath {
     }
 }
 
-/// A shape drawn from SVG path data in a square `viewBox` of the given size, scaled to fit its frame.
+/// A shape drawn from SVG path data, scaled so a `viewBox` of the given width fills the frame's width.
 struct SVGShape: Shape {
     let data: String
     var viewBox: CGFloat = 24
 
     func path(in rect: CGRect) -> Path {
-        let scale = min(rect.width, rect.height) / viewBox
+        let scale = rect.width / viewBox
         return SVGPath.path(data)
             .applying(CGAffineTransform(scaleX: scale, y: scale))
             .offsetBy(dx: rect.minX, dy: rect.minY)
