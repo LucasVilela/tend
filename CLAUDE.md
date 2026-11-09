@@ -28,6 +28,7 @@ An iPhone app for three daily practices (journal, meditation, exercise) plus a m
 - Sample data is for `#Preview` only, via an in-memory `ModelContainer`.
 - Accessibility: VoiceOver labels on icon buttons, mood faces and charts, 44 pt targets, Dynamic Type, and Reduce Motion (SPEC §9).
 - After each milestone, build with `xcodebuild` for an iOS Simulator and fix every warning and error.
+- Git: don't add `Co-Authored-By` or other AI attribution lines to commit messages or pull request descriptions.
 
 ## Don't
 - Add a meditation timer or a free-writing journal editor.
