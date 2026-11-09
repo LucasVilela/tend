@@ -55,6 +55,37 @@ enum Formats {
         calendar.isDate(date, inSameDayAs: now) ? "Today" : shortDay(date, calendar: calendar)
     }
 
+    /// "Today, 8:40 pm" or "Sun 8 Nov, 9:40 pm" (the When row).
+    static func whenLabel(_ date: Date, now: Date = .now, calendar: Calendar = .practices) -> String {
+        "\(relativeDay(date, now: now, calendar: calendar)), \(time(date, calendar: calendar))"
+    }
+
+    /// "Today · 6:40 am" or "Sun 8 Nov · 9:15 pm" (list rows).
+    static func dayAndTime(_ date: Date, now: Date = .now, calendar: Calendar = .practices) -> String {
+        "\(relativeDay(date, now: now, calendar: calendar)) · \(time(date, calendar: calendar))"
+    }
+
+    /// "Mon 9 Nov · 8:40 pm" (always the date, for sheet headers and stored answers).
+    static func dateAndTime(_ date: Date, calendar: Calendar = .practices) -> String {
+        "\(shortDay(date, calendar: calendar)) · \(time(date, calendar: calendar))"
+    }
+
+    static func monthName(_ date: Date, calendar: Calendar = .practices) -> String {
+        formatter("MMMM", calendar: calendar).string(from: date)
+    }
+
+    static func monthAndYear(_ date: Date, calendar: Calendar = .practices) -> String {
+        formatter("MMMM yyyy", calendar: calendar).string(from: date)
+    }
+
+    static func shortMonthAndYear(_ date: Date, calendar: Calendar = .practices) -> String {
+        formatter("MMM yyyy", calendar: calendar).string(from: date)
+    }
+
+    static func shortMonth(_ date: Date, calendar: Calendar = .practices) -> String {
+        formatter("MMM", calendar: calendar).string(from: date)
+    }
+
     /// Greeting by time of day: morning before 12:00, afternoon before 18:00, evening after.
     static func greeting(at date: Date, name: String, calendar: Calendar = .practices) -> String {
         let hour = calendar.component(.hour, from: date)

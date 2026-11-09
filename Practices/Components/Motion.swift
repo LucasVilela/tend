@@ -44,6 +44,24 @@ struct MotionClock<Content: View>: View {
     }
 }
 
+extension View {
+    /// The 0.7 s squash-and-stretch bounce, played whenever `trigger` changes.
+    func squashBounce<T: Equatable>(trigger: T) -> some View {
+        keyframeAnimator(initialValue: CGSize(width: 1, height: 1), trigger: trigger) { content, scale in
+            content.scaleEffect(x: scale.width, y: scale.height)
+        } keyframes: { _ in
+            let frames = Tokens.Motion.tapBounceKeyframes
+            let total = Tokens.Motion.tapBounceSeconds
+            KeyframeTrack(\.self) {
+                CubicKeyframe(frames[1], duration: total * 0.28)
+                CubicKeyframe(frames[2], duration: total * 0.24)
+                CubicKeyframe(frames[3], duration: total * 0.22)
+                CubicKeyframe(frames[4], duration: total * 0.26)
+            }
+        }
+    }
+}
+
 /// A blob that slowly morphs between the two `blobmorph` shapes (9 s loop). Static with Reduce Motion.
 struct WobblingBlob<Content: View>: View {
     var delay: Double = 0

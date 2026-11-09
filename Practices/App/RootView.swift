@@ -12,7 +12,7 @@ struct RootView: View {
                     .navigationDestination(for: TodayRoute.self) { route in
                         switch route {
                         case .insights: PlaceholderScreen(title: "Insights", backTitle: "Today")
-                        case .mood: PlaceholderScreen(title: "Mood", backTitle: "Today")
+                        case .mood: MoodView()
                         }
                     }
             }
@@ -29,7 +29,24 @@ struct RootView: View {
         }
         .environment(router)
         .background(Theme.background.ignoresSafeArea())
+        #if DEBUG
+        .onAppear(perform: applyDebugStartScreen)
+        #endif
     }
+
+    #if DEBUG
+    /// Debug-only launch arguments for checking screens against the design:
+    /// `-startTab journal`, `-startRoute mood|insights`, `-startLogger journal|meditation|exercise`.
+    private func applyDebugStartScreen() {
+        let defaults = UserDefaults.standard
+        if let tab = defaults.string(forKey: "startTab").flatMap(AppTab.init(rawValue:)) { router.tab = tab }
+        if defaults.string(forKey: "startRoute") == "mood" { router.todayPath = [.mood] }
+        if defaults.string(forKey: "startRoute") == "insights" { router.todayPath = [.insights] }
+        if let practice = defaults.string(forKey: "startLogger").flatMap(Practice.init(rawValue:)) {
+            router.openLogger(for: practice)
+        }
+    }
+    #endif
 }
 
 /// Stand-in for screens that later milestones build.
