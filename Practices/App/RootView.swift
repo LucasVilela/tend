@@ -23,7 +23,7 @@ struct RootView: View {
                 JournalView().tabContent().tag(AppTab.journal)
                 MeditationView().tabContent().tag(AppTab.meditate)
                 ExerciseView().tabContent().tag(AppTab.exercise)
-                PlaceholderScreen(title: "Vision").tabContent().tag(AppTab.vision)
+                VisionView().tabContent().tag(AppTab.vision)
             }
             TabBar(selection: $router.tab)
                 .ignoresSafeArea(.keyboard)

@@ -26,6 +26,7 @@ targets:
         PRODUCT_NAME: Practices
         TARGETED_DEVICE_FAMILY: "1"
         ENABLE_PREVIEWS: YES
+        DEVELOPMENT_ASSET_PATHS: '"Practices/Preview Content"'
         GENERATE_INFOPLIST_FILE: YES
         INFOPLIST_FILE: Config/Practices-Info.plist
         ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor

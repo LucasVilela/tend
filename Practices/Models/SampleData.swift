@@ -1,6 +1,7 @@
 #if DEBUG
 import Foundation
 import SwiftData
+import UIKit
 
 /// The design's sample data, placed relative to today so the screens look like the screenshots
 /// (today plays the part of Mon 9 Nov). For `#Preview` and the `-sampleData` debug launch argument only.
@@ -92,6 +93,34 @@ enum SampleData {
         for (d, h, m, title, type, minutes, intensity, km) in workouts {
             context.insert(Workout(startedAt: at(d, h, m), title: title, type: type,
                                    durationMinutes: minutes, intensity: intensity, distanceKm: km))
+        }
+
+        // Vision board, as in the design (left column, then right).
+        func photo(_ name: String) -> Data? { UIImage(named: "sample-\(name)")?.pngData() }
+        let board: [(Int, TileKind, String?, Int?, String?, String?, String?, TextLabel?, Date?, Int?)] = [
+            (0, .image, "mountains", 2, "Hike the Overland Track", "By February", nil, nil, nil, nil),
+            (0, .text, nil, nil, nil, nil, "Meditate 100 days", .goal, nil, 1),
+            (0, .image, "night", 2, "Sleep under the stars", nil, nil, nil, nil, nil),
+            (1, .text, nil, nil, nil, nil, "Calm mind, strong body.", .mantra, nil, nil),
+            (1, .image, "ocean", 0, "Learn to surf", nil, nil, nil, nil, nil),
+            (1, .text, nil, nil, nil, nil, "Run a half marathon", .goal,
+             cal.date(from: DateComponents(year: cal.component(.year, from: now) + 1, month: 5, day: 1)), 0),
+            (1, .image, "forest", 1, "Weekends outside", nil, nil, nil, nil, nil),
+            (1, .text, nil, nil, nil, nil, "Steady · Present · Kind", .wordsForTheYear, nil, nil),
+        ]
+        var orders = [0, 0]
+        for (column, kind, image, heightClass, caption, subtitle, text, label, due, accent) in board {
+            let tile = VisionTile(kind: kind, column: column, order: orders[column])
+            orders[column] += 1
+            tile.imageData = image.flatMap(photo)
+            tile.heightClass = heightClass
+            tile.caption = caption
+            tile.subtitle = subtitle
+            tile.text = text
+            tile.textLabel = label
+            tile.dueMonth = due
+            tile.accentIndex = accent
+            context.insert(tile)
         }
 
         // Mood check-ins, newest first in the design.

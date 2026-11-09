@@ -144,6 +144,8 @@ import SwiftData
 
 /// Vision board tile. Look-and-remember only: no tracking fields.
 @Model final class VisionTile {
+    /// Stable identity for drag-to-reorder.
+    var uid: UUID = UUID()
     var kindRaw: String = TileKind.text.rawValue
     /// 0 or 1.
     var column: Int = 0

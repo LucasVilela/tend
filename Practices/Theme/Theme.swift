@@ -54,6 +54,10 @@ enum Theme {
     static let sparkleGold = P.sparkleGold.color
     static let sparkleDim = P.sparkleDim.color
     static let wave = Tokens.Shape.waveColor.color
+    /// Photo tiles: caption colours and the bottom scrim (from design/screens/vision.html).
+    static let onImage = RGB(0xFFFFFF).color
+    static let onImageSecondary = RGB(0xDAD8D3).color
+    static let scrim = RGB(0x0A0A0C).color.opacity(0.8)
     static let partialOpacity = P.accentPartialOpacity
 
     static let screenPadding = Tokens.Spacing.screenHorizontal
